@@ -19,10 +19,6 @@ def init_all():
 
 def run_automation():
     init_all()
-
-    print("\n" + "=" * 40)
-    print("      START (Line Follower)      ")
-    print("=" * 40)
     time.sleep(2)
 
     last_direction = "mitte"

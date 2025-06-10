@@ -9,9 +9,6 @@ log = logging.getLogger(__name__)
 
 
 def main():
-    print("\n" + "=" * 50)
-    print("    LAFVIN ROBOCAR - STARTSEQUENZ")
-    print("=" * 50)
 
     try:
         control.run_automation()
