@@ -9,6 +9,12 @@ log = logging.getLogger(__name__)
 BASE_SPEED = 40
 STEER_SPEED = 25
 
+LINE_DETECTED = 1
+LINE_NOT_DETECTED = 0
+
+BREAK = 2
+DELAY_CORRECTION = 0.005
+
 
 def init_all():
     print("Initialisiere Steuerungssystem...")
@@ -19,7 +25,7 @@ def init_all():
 
 def run_automation():
     init_all()
-    time.sleep(2)
+    time.sleep(BREAK)
 
     last_direction = "mitte"
 
@@ -27,30 +33,58 @@ def run_automation():
         while True:
             links, mitte, rechts = sensor.read_sensors()
 
-            if mitte == 1 and links == 0 and rechts == 0:
+            if (
+                mitte == LINE_DETECTED
+                and links == LINE_NOT_DETECTED
+                and rechts == LINE_NOT_DETECTED
+            ):
                 motor.drive_forward(BASE_SPEED)
                 last_direction = "mitte"
 
-            elif links == 1 and mitte == 1 and rechts == 0:
+            elif (
+                links == LINE_DETECTED
+                and mitte == LINE_DETECTED
+                and rechts == LINE_NOT_DETECTED
+            ):
                 motor.steer_left(STEER_SPEED)
                 last_direction = "links"
 
-            elif links == 1 and mitte == 0 and rechts == 0:
+            elif (
+                links == LINE_DETECTED
+                and mitte == LINE_NOT_DETECTED
+                and rechts == LINE_NOT_DETECTED
+            ):
                 motor.spin_left(STEER_SPEED)
                 last_direction = "links"
 
-            elif rechts == 1 and mitte == 1 and links == 0:
+            elif (
+                rechts == LINE_DETECTED
+                and mitte == LINE_DETECTED
+                and links == LINE_NOT_DETECTED
+            ):
                 motor.steer_right(STEER_SPEED)
                 last_direction = "rechts"
 
-            elif rechts == 1 and mitte == 0 and links == 0:
+            elif (
+                rechts == LINE_DETECTED
+                and mitte == LINE_NOT_DETECTED
+                and links == LINE_NOT_DETECTED
+            ):
                 motor.spin_right(STEER_SPEED)
                 last_direction = "rechts"
 
-            elif links == 1 and mitte == 1 and rechts == 1:
+            elif (
+                links == LINE_DETECTED
+                and mitte == LINE_DETECTED
+                and rechts == LINE_DETECTED
+            ):
                 motor.drive_forward(BASE_SPEED)
 
-            elif links == 0 and mitte == 0 and rechts == 0:
+            elif (
+                links == LINE_NOT_DETECTED
+                and mitte == LINE_NOT_DETECTED
+                and rechts == LINE_NOT_DETECTED
+            ):
                 if last_direction == "links":
                     motor.spin_left(STEER_SPEED)
                 elif last_direction == "rechts":
@@ -58,10 +92,9 @@ def run_automation():
                 else:
                     motor.drive_forward(BASE_SPEED - 5)
 
-            time.sleep(0.005)
+            time.sleep(DELAY_CORRECTION)
 
     except KeyboardInterrupt:
-        print("\n\n[INFO] Abbruch durch Nutzer.")
         motor.stop_all()
 
 
