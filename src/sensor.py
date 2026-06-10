@@ -1,53 +1,47 @@
 import logging
 import time
-from typing import Optional
+from typing import Optional, Tuple
 
 from gpiozero import LineSensor
 
 log = logging.getLogger(__name__)
 
-# PIN BELEGUNG
-PIN_LINKS = 14
-PIN_MITTE = 15
-PIN_RECHTS = 23
+PIN_SENSOR_LINKS = 14
+PIN_SENSOR_MITTE = 15
+PIN_SENSOR_RECHTS = 23
 
-sensor_l: Optional[LineSensor] = None
-sensor_m: Optional[LineSensor] = None
-sensor_r: Optional[LineSensor] = None
+sensor_links: Optional[LineSensor] = None
+sensor_mitte: Optional[LineSensor] = None
+sensor_rechts: Optional[LineSensor] = None
 
 
 def init():
-    global sensor_l, sensor_m, sensor_r
+    global sensor_links, sensor_mitte, sensor_rechts
     print("Initialisiere Linien-Sensoren...")
-    sensor_l = LineSensor(PIN_LINKS)
-    sensor_m = LineSensor(PIN_MITTE)
-    sensor_r = LineSensor(PIN_RECHTS)
+    sensor_links = LineSensor(PIN_SENSOR_LINKS)
+    sensor_mitte = LineSensor(PIN_SENSOR_MITTE)
+    sensor_rechts = LineSensor(PIN_SENSOR_RECHTS)
+    print("Sensoren betriebsbereit.")
 
-    print("Sensoren funktionieren.")
 
-
-def read_sensors():
-    global sensor_l, sensor_m, sensor_r
-
-    if sensor_l is None or sensor_m is None or sensor_r is None:
+def read_sensors() -> Tuple[bool, bool, bool]:
+    global sensor_links, sensor_mitte, sensor_rechts
+    if sensor_links is None or sensor_mitte is None or sensor_rechts is None:
         init()
+    assert sensor_links is not None
+    assert sensor_mitte is not None
+    assert sensor_rechts is not None
 
-    assert sensor_l is not None
-    assert sensor_m is not None
-    assert sensor_r is not None
-
-    links_erkannt = 1 if sensor_l.value else 0
-    mitte_erkannt = 1 if sensor_m.value else 0
-    rechts_erkannt = 1 if sensor_r.value else 0
+    links_erkannt = bool(sensor_links.value)
+    mitte_erkannt = bool(sensor_mitte.value)
+    rechts_erkannt = bool(sensor_rechts.value)
 
     return links_erkannt, mitte_erkannt, rechts_erkannt
 
 
 def test_sensors():
     init()
-    print("LINIENSENSOR-TEST...")
-    print("Bewege ein schwarzes Objekt unter die Sensoren.")
-
+    print("LINIENSENSOR-TEST... Strg+C zum Abbrechen.")
     try:
         while True:
             links, mitte, rechts = read_sensors()
@@ -57,7 +51,7 @@ def test_sensors():
             )
             time.sleep(0.1)
     except KeyboardInterrupt:
-        print("\n\n[INFO] Test erfolgreich.")
+        print("\n\n[INFO] Test erfolgreich beendet.")
 
 
 if __name__ == "__main__":
