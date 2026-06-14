@@ -1,9 +1,11 @@
 import logging
+
 import control
 import motor
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
+
 
 def main():
     try:
