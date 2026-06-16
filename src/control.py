@@ -7,8 +7,8 @@ import sensor
 
 log = logging.getLogger(__name__)
 
-BASE_SPEED = 40
-STEER_SPEED = 35
+BASE_SPEED = 46
+STEER_SPEED = 38
 BREAK_DELAY = 2.0
 DELAY_CORRECTION = 0.005
 STRAIGHT_REDUCTION = 5

@@ -1,6 +1,6 @@
 {
-    "BASE_SPEED": 40,
-    "STEER_SPEED": 35,
+    "BASE_SPEED": 46,
+    "STEER_SPEED": 38,
     "BREAK_DELAY": 2.0,
     "DELAY_CORRECTION": 0.002,
     "FACTOR_STEER_INNER": 0.15,
